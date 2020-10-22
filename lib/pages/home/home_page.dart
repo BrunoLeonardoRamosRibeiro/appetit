@@ -1,4 +1,5 @@
 import 'package:appetit/pages/home/controller/home_page_controller.dart';
+import 'package:appetit/pages/login/widgets/search_widget.dart';
 import 'package:appetit/shared/constants.dart';
 import 'package:appetit/shared/widgets/picture_widget.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,11 @@ class _HomePageState extends State<HomePage> {
                     ),
                     color: Colors.white,
                   ),
+                ),
+                SearchWidget(
+                  label: "Digite sua busca aqui",
+                  prefixIcon: Icon(Icons.search_outlined, color: ORANGE_APPETIT, size: 30,),
+                  sufixIcon: Icon(Icons.tune_outlined, color: ORANGE_APPETIT, size: 30,),
                 ),
               ],
             ),
