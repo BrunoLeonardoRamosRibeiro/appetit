@@ -100,12 +100,18 @@ class _HomePageState extends State<HomePage> {
                       itemCount: controller.dates.length,
                       itemBuilder: (_, index) {
                         List<Order> lista = controller.orders.where((order) => order.data.contains(controller.dates[index]) ).toList();
+                        
+                        double total = 0.00;
+                        
+                        lista.forEach((e) {
+                          total = total + e.total;                          
+                        });
 
                         return Column(
                           children: [
                             ListTile(
                                 title: Text(
-                              controller.dates[index] + ', você já vendeu R\$ ',
+                              controller.dates[index] + ', você já vendeu R\$ ${total.toStringAsFixed(2)}',
                               style: TextStyle(fontSize: 16),
                             )),
                             ListView.builder(
@@ -115,6 +121,7 @@ class _HomePageState extends State<HomePage> {
                                 return Card(
                                   child: ListTile(
                                     title: Text(lista[index].nomecliente),
+                                    trailing: Text('R\$ ${lista[index].total.toStringAsFixed(2)}'),
                                   ),
                                 );
                               },
