@@ -12,38 +12,42 @@ class Product {
   Product({
     this.codigoproduto,
     this.produto,
-    this.quantidade,
-    this.valorunitario,
-    this.valortotal,
+    this.preco,
     this.imagem,
     this.categoria,
+    this.descricao,
+    this.opcoes,
+    this.pesquisa,
   });
 
   String codigoproduto;
   String produto;
-  int quantidade;
-  double valorunitario;
-  double valortotal;
+  double preco;
   String imagem;
   String categoria;
+  String descricao;
+  List<String> opcoes;
+  String pesquisa;
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
     codigoproduto: json["codigoproduto"],
     produto: json["produto"],
-    quantidade: json["quantidade"],
-    valorunitario: json["valorunitario"].toDouble(),
-    valortotal: json["valortotal"].toDouble(),
+    preco: json["preco"].toDouble(),
     imagem: json["imagem"],
     categoria: json["categoria"],
+    descricao: json["descricao"],
+    opcoes: List<String>.from(json["opcoes"].map((x) => x)),
+      pesquisa: json["descricao"]+' '+ json["categoria"]+ ' '+json["produto"]
   );
 
   Map<String, dynamic> toJson() => {
     "codigoproduto": codigoproduto,
     "produto": produto,
-    "quantidade": quantidade,
-    "valorunitario": valorunitario,
-    "valortotal": valortotal,
+    "preco": preco,
     "imagem": imagem,
     "categoria": categoria,
+    "descricao": descricao,
+    "opcoes": List<dynamic>.from(opcoes.map((x) => x)),
+    "pesquisa": pesquisa,
   };
 }

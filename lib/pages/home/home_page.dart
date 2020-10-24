@@ -1,13 +1,13 @@
 import 'package:appetit/pages/home/controller/home_page_controller.dart';
 import 'package:appetit/pages/login/widgets/search_widget.dart';
+import 'package:appetit/pages/select_product/select_product_page.dart';
 import 'package:appetit/shared/constants.dart';
 import 'package:appetit/shared/models/order.dart';
+import 'package:appetit/shared/widgets/header_widget.dart';
 import 'package:appetit/shared/widgets/picture_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:grouped_list/grouped_list.dart';
-import "package:collection/collection.dart";
 
 class HomePage extends StatefulWidget {
   @override
@@ -31,35 +31,14 @@ class _HomePageState extends State<HomePage> {
                     size: 60,
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  height: 50,
-                  width: double.maxFinite,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Olá, Alessandra!',
-                        style: TextStyle(fontSize: 26, color: ORANGE_APPETIT),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.70,
-                        child: Divider(
-                          color: Colors.lightGreen,
-                          thickness: 2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                HeaderWidget(text: 'Olá, Alessandra!', fontSize: 24),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: MaterialButton(
                     height: 60,
                     elevation: 10,
                     onPressed: () {
-                      controller.fetchOrders();
+                      Get.to(SelectProductPage());
                     },
                     child: Row(
                       children: [
@@ -97,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                     visible: !controller.isLoading.value,
                     child: ListView.builder(
                       shrinkWrap: true,
+                      physics: ClampingScrollPhysics(),
                       itemCount: controller.dates.length,
                       itemBuilder: (_, index) {
                         List<Order> lista = controller.orders.where((order) => order.data.contains(controller.dates[index]) ).toList();
@@ -116,6 +96,7 @@ class _HomePageState extends State<HomePage> {
                             )),
                             ListView.builder(
                               shrinkWrap: true,
+                              physics: ClampingScrollPhysics(),
                               itemCount: lista.length,
                               itemBuilder: (__, index) {
                                 return Card(

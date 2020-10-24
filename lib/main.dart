@@ -1,4 +1,5 @@
 import 'package:appetit/pages/login/login_page.dart';
+import 'package:appetit/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Appetit',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: ORANGE_APPETIT,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         textTheme: GoogleFonts.montserratTextTheme(),
       ),

@@ -5,6 +5,7 @@ import 'package:appetit/pages/login/widgets/logo_widget.dart';
 import 'package:appetit/shared/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class LoginPage extends StatefulWidget {
@@ -45,8 +46,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
     return GetBuilder<LoginController>(
       init: LoginController(),
+
       builder: (controller) => Scaffold(
         body: Center(
           child: SingleChildScrollView(

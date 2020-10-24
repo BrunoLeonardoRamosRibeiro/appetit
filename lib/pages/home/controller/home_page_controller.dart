@@ -19,7 +19,6 @@ class HomePageController extends GetxController{
   RxBool isLoading = RxBool(false);
   void setLoading(bool value) => isLoading.value = value;
 
-
   fetchOrders() async {
     setLoading(true);
 
