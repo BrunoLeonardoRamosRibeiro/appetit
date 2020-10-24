@@ -99,6 +99,8 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       itemCount: controller.dates.length,
                       itemBuilder: (_, index) {
+                        List<Order> lista = controller.orders.where((order) => order.data.contains(controller.dates[index]) ).toList();
+
                         return Column(
                           children: [
                             ListTile(
@@ -106,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                               controller.dates[index] + ', você já vendeu R\$ ',
                               style: TextStyle(fontSize: 16),
                             )),
-                            /*ListView.builder(
+                            ListView.builder(
                               shrinkWrap: true,
                               itemCount: lista.length,
                               itemBuilder: (__, index) {
@@ -116,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 );
                               },
-                            ),*/
+                            ),
                           ],
                         );
                       },
