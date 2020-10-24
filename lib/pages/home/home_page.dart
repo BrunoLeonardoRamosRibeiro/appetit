@@ -1,9 +1,13 @@
 import 'package:appetit/pages/home/controller/home_page_controller.dart';
 import 'package:appetit/pages/login/widgets/search_widget.dart';
 import 'package:appetit/shared/constants.dart';
+import 'package:appetit/shared/models/order.dart';
 import 'package:appetit/shared/widgets/picture_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:grouped_list/grouped_list.dart';
+import "package:collection/collection.dart";
 
 class HomePage extends StatefulWidget {
   @override
@@ -55,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                     height: 60,
                     elevation: 10,
                     onPressed: () {
-                      // teste
+                      controller.fetchOrders();
                     },
                     child: Row(
                       children: [
@@ -77,8 +81,28 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SearchWidget(
                   label: "Digite sua busca aqui",
-                  prefixIcon: Icon(Icons.search_outlined, color: ORANGE_APPETIT, size: 30,),
-                  sufixIcon: Icon(Icons.tune_outlined, color: ORANGE_APPETIT, size: 30,),
+                  prefixIcon: Icon(
+                    Icons.search_outlined,
+                    color: ORANGE_APPETIT,
+                    size: 30,
+                  ),
+                  sufixIcon: Icon(
+                    Icons.tune_outlined,
+                    color: ORANGE_APPETIT,
+                    size: 30,
+                  ),
+                ),
+                Obx(
+                  ()=> Visibility(
+                    visible: !controller.isLoading.value,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: controller.dates.length,
+                      itemBuilder: (_, index){
+                        return ListTile(title: Text(controller.dates[index]+', você já vendeu R\$ ', style: TextStyle(fontSize: 16),));
+                      },
+                    ),
+                  ),
                 ),
               ],
             ),
