@@ -22,20 +22,15 @@ class HomePageController extends GetxController{
 
   fetchOrders() async {
     setLoading(true);
+
     Either<String, List<Order>> resOrders = await orderRepository.getOrders();
     resOrders.fold((msg) => print(msg), (listOrders) => setOrders(listOrders));
-    print(orders.length);
-
 
     var groupByDate = groupBy(orders, (obj) => obj.data);
     groupByDate.forEach((date, list) {
       dates.add(date);
-      print('${date}');
     });
-
     setLoading(false);
-
-
   }
 
   @override

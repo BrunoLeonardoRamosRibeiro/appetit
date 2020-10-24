@@ -93,13 +93,32 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Obx(
-                  ()=> Visibility(
+                  () => Visibility(
                     visible: !controller.isLoading.value,
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: controller.dates.length,
-                      itemBuilder: (_, index){
-                        return ListTile(title: Text(controller.dates[index]+', você já vendeu R\$ ', style: TextStyle(fontSize: 16),));
+                      itemBuilder: (_, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                                title: Text(
+                              controller.dates[index] + ', você já vendeu R\$ ',
+                              style: TextStyle(fontSize: 16),
+                            )),
+                            /*ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: lista.length,
+                              itemBuilder: (__, index) {
+                                return Card(
+                                  child: ListTile(
+                                    title: Text(lista[index].nomecliente),
+                                  ),
+                                );
+                              },
+                            ),*/
+                          ],
+                        );
                       },
                     ),
                   ),
