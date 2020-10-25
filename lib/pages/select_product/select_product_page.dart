@@ -1,3 +1,4 @@
+import 'package:appetit/pages/detail_order/detail_order_page.dart';
 import 'package:appetit/pages/login/widgets/search_widget.dart';
 import 'package:appetit/pages/select_product/controller/select_product_controller.dart';
 import 'package:appetit/shared/constants.dart';
@@ -16,6 +17,19 @@ class SelectProductPage extends StatelessWidget {
     return GetBuilder<SelectProductController>(
       init: SelectProductController(),
       builder: (controller) => Scaffold(
+        bottomNavigationBar: Obx(
+          () => Visibility(
+            visible: controller.orderTotal.value != 0,
+            child: Material(
+              elevation: 10,
+              child: Container(
+                height: 80,
+                width: double.maxFinite,
+                color: ORANGE_APPETIT,
+              ),
+            ),
+          ),
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -118,7 +132,8 @@ class SelectProductPage extends StatelessWidget {
                           ListTile(
                             title: Text(
                               controller.categories[index].categoria,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                           ListView.builder(
@@ -126,54 +141,70 @@ class SelectProductPage extends StatelessWidget {
                             physics: ClampingScrollPhysics(),
                             itemCount: lista.length,
                             itemBuilder: (__, indexProduct) {
-                              return Card(
-                                child: Container(
-                                  height: 90,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 80,
-                                        width: 80,
-                                        child: PictureWidget(
-                                          imagePath: lista[indexProduct].imagem,
-                                          size: 70,
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            lista[indexProduct].produto,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                              //print('Index do Produto ===> ' + indexProduct.toString());
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Get.to(DetailOrderPage(),
+                                      arguments: lista[indexProduct]);
+                                },
+                                child: Card(
+                                  child: Container(
+                                    height: 90,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 80,
+                                          width: 80,
+                                          child: PictureWidget(
+                                            imagePath:
+                                                lista[indexProduct].imagem,
+                                            size: 70,
                                           ),
-                                          Visibility(
-                                            visible: lista[indexProduct].descricao.isNotEmpty,
-                                            child: Text(
-                                              lista[indexProduct].descricao,
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              lista[indexProduct].produto,
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
-                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: lista[indexProduct]
+                                                  .descricao
+                                                  .isNotEmpty,
+                                              child: Text(
+                                                lista[indexProduct].descricao,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Container(
+                                            width: 80,
+                                            child: Center(
+                                              child: Text(
+                                                'R\$ ${lista[indexProduct].preco.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 16),
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Spacer(),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Container(
-                                          width: 80,
-                                          child: Center(
-                                            child: Text('R\$ ${lista[indexProduct].preco.toStringAsFixed(2)}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );

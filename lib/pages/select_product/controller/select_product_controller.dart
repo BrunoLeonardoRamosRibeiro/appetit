@@ -2,13 +2,15 @@ import 'package:appetit/shared/models/category.dart';
 import 'package:appetit/shared/models/product.dart';
 import 'package:appetit/shared/repositories/category_repository.dart';
 import 'package:appetit/shared/repositories/product_repository.dart';
-import 'package:collection/collection.dart';
 import 'package:either_option/either_option.dart';
 import 'package:get/get.dart';
 
 class SelectProductController extends GetxController {
   ProductRepository productRepository = ProductRepository();
   CategoryRepository categoryRepository = CategoryRepository();
+
+  RxDouble orderTotal = RxDouble(0.00);
+  setOrderTotal(double value)=> orderTotal.value = value;
 
   RxList<Product> products = RxList<Product>();
 
