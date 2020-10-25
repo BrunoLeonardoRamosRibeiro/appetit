@@ -50,4 +50,7 @@ class Product {
     "opcoes": List<dynamic>.from(opcoes.map((x) => x)),
     "pesquisa": pesquisa,
   };
+
+  bool isOrder = false;
+
 }

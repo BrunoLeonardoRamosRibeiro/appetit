@@ -1,4 +1,5 @@
 import 'package:appetit/shared/models/category.dart';
+import 'package:appetit/shared/models/order.dart';
 import 'package:appetit/shared/models/product.dart';
 import 'package:appetit/shared/repositories/category_repository.dart';
 import 'package:appetit/shared/repositories/product_repository.dart';
@@ -9,11 +10,11 @@ class SelectProductController extends GetxController {
   ProductRepository productRepository = ProductRepository();
   CategoryRepository categoryRepository = CategoryRepository();
 
-  RxDouble orderTotal = RxDouble(0.00);
-  setOrderTotal(double value)=> orderTotal.value = value;
+  RxList<String> listOrder = RxList<String>();
+  clearListOrder()=> listOrder.clear();
+  addItemListOrder(String item) => listOrder.add(item);
 
   RxList<Product> products = RxList<Product>();
-
   setProducts(List<Product> listProduct) => products.value = listProduct;
 
   RxBool isLoading = RxBool(true);
@@ -39,6 +40,37 @@ class SelectProductController extends GetxController {
         (msg) => print(msg), (listCategories) => setCategories(listCategories));
   }
 
+  RxList<Item> itemsOrder = RxList<Item>();
+  clearItemsOrder() {
+    itemsOrder.clear();
+    setTotalValueOrder();
+  }
+
+  setNewItem(Item newItem) {
+
+    var contain = itemsOrder.where((element) => element.codigoproduto == newItem.codigoproduto);
+
+    if (contain.isEmpty) {
+      itemsOrder.add(newItem);
+    } else {
+      itemsOrder.removeWhere((it) => it.codigoproduto == newItem.codigoproduto);
+      itemsOrder.add(newItem);
+    }
+
+    setTotalValueOrder();
+  }
+
+  RxDouble totalValueOrder = RxDouble(0.00);
+  setTotalValueOrder() {
+    var total = 0.00;
+    if (itemsOrder.length > 0) {
+      itemsOrder.forEach((itens) {
+        total = total + (itens.quantidade * itens.valorunitario);
+      });
+    }
+    totalValueOrder.value = total;
+  }
+
   @override
   void onInit() {
     // TODO: implement onInit
@@ -47,7 +79,7 @@ class SelectProductController extends GetxController {
     setLoading(true);
     fetchCategories();
     fetchProducts();
+    clearItemsOrder();
     setLoading(false);
-
   }
 }

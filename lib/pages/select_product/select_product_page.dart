@@ -1,5 +1,6 @@
 import 'package:appetit/pages/detail_order/detail_order_page.dart';
 import 'package:appetit/pages/login/widgets/search_widget.dart';
+import 'package:appetit/pages/select_customer/select_customer_page.dart';
 import 'package:appetit/pages/select_product/controller/select_product_controller.dart';
 import 'package:appetit/shared/constants.dart';
 import 'package:appetit/shared/models/product.dart';
@@ -11,7 +12,12 @@ import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:get/get.dart';
 
-class SelectProductPage extends StatelessWidget {
+class SelectProductPage extends StatefulWidget {
+  @override
+  _SelectProductPageState createState() => _SelectProductPageState();
+}
+
+class _SelectProductPageState extends State<SelectProductPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SelectProductController>(
@@ -19,13 +25,54 @@ class SelectProductPage extends StatelessWidget {
       builder: (controller) => Scaffold(
         bottomNavigationBar: Obx(
           () => Visibility(
-            visible: controller.orderTotal.value != 0,
+            visible: controller.totalValueOrder.value != 0,
             child: Material(
-              elevation: 10,
+              elevation: 14,
               child: Container(
                 height: 80,
                 width: double.maxFinite,
                 color: ORANGE_APPETIT,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Total: R\$ ${controller.totalValueOrder.value.toStringAsFixed(2)}',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(SelectClientPage());
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              'Avançar',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -90,7 +137,7 @@ class SelectProductPage extends StatelessWidget {
                               height: 10,
                               style: RoundedProgressBarStyle(
                                   colorProgress: ORANGE_APPETIT,
-                                  //backgroundProgress: Colors.lightBlueAccent,
+                                  backgroundProgress: Colors.grey.withOpacity(0.1),
                                   borderWidth: 0,
                                   widthShadow: 0),
                               borderRadius: BorderRadius.circular(24),
@@ -141,14 +188,31 @@ class SelectProductPage extends StatelessWidget {
                             physics: ClampingScrollPhysics(),
                             itemCount: lista.length,
                             itemBuilder: (__, indexProduct) {
-                              //print('Index do Produto ===> ' + indexProduct.toString());
-
                               return GestureDetector(
                                 onTap: () {
                                   Get.to(DetailOrderPage(),
-                                      arguments: lista[indexProduct]);
+                                          arguments: lista[indexProduct])
+                                      .then((value) {
+                                    if (value) {
+                                      print(
+                                          'Total de Itens adicionados ==> ${controller.itemsOrder.length}');
+
+                                      print(
+                                          'Valor Total ==> ${controller.totalValueOrder}');
+
+                                      controller.addItemListOrder(
+                                          lista[indexProduct].codigoproduto);
+
+                                      setState(() {
+                                        lista[indexProduct].isOrder = true;
+                                      });
+                                    }
+                                  });
                                 },
                                 child: Card(
+                                  color: lista[indexProduct].isOrder
+                                      ? ORANGE_APPETIT
+                                      : Colors.white,
                                   child: Container(
                                     height: 90,
                                     child: Row(
@@ -171,6 +235,10 @@ class SelectProductPage extends StatelessWidget {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.bold,
+                                                color:
+                                                    !lista[indexProduct].isOrder
+                                                        ? Colors.black
+                                                        : Colors.white,
                                               ),
                                             ),
                                             Visibility(
@@ -181,8 +249,10 @@ class SelectProductPage extends StatelessWidget {
                                                 lista[indexProduct].descricao,
                                                 style: TextStyle(
                                                   fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.grey,
+                                                  color: !lista[indexProduct]
+                                                          .isOrder
+                                                      ? Colors.grey
+                                                      : Colors.white,
                                                 ),
                                               ),
                                             ),
@@ -197,8 +267,10 @@ class SelectProductPage extends StatelessWidget {
                                               child: Text(
                                                 'R\$ ${lista[indexProduct].preco.toStringAsFixed(2)}',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 16),
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: !lista[indexProduct].isOrder? Colors.black : Colors.white,
+                                                ),
                                               ),
                                             ),
                                           ),

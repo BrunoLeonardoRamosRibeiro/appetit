@@ -1,15 +1,15 @@
 // To parse this JSON data, do
 //
-//     final client = clientFromJson(jsonString);
+//     final client = customerFromJson(jsonString);
 
 import 'dart:convert';
 
-Client clientFromJson(String str) => Client.fromJson(json.decode(str));
+Customer customerFromJson(String str) => Customer.fromJson(json.decode(str));
 
-String clientToJson(Client data) => json.encode(data.toJson());
+String customerToJson(Customer data) => json.encode(data.toJson());
 
-class Client {
-  Client({
+class Customer {
+  Customer({
     this.codigocliente,
     this.nomecliente,
     this.imagem,
@@ -19,7 +19,7 @@ class Client {
   String nomecliente;
   String imagem;
 
-  factory Client.fromJson(Map<String, dynamic> json) => Client(
+  factory Customer.fromJson(Map<String, dynamic> json) => Customer(
     codigocliente: json["codigocliente"],
     nomecliente: json["nomecliente"],
     imagem: json["imagem"],
@@ -30,4 +30,6 @@ class Client {
     "nomecliente": nomecliente,
     "imagem": imagem,
   };
+
+  bool isOrder = false;
 }

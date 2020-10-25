@@ -1,7 +1,8 @@
 import 'package:appetit/pages/detail_order/controller/detail_order_controller.dart';
 import 'package:appetit/pages/detail_order/widgets/options_widget.dart';
-import 'package:appetit/pages/home/controller/home_page_controller.dart';
+import 'package:appetit/pages/select_product/controller/select_product_controller.dart';
 import 'package:appetit/shared/constants.dart';
+import 'package:appetit/shared/models/order.dart';
 import 'package:appetit/shared/widgets/decoration_shadow_widget.dart';
 import 'package:appetit/shared/widgets/header_widget.dart';
 import 'package:appetit/shared/widgets/picture_widget.dart';
@@ -15,7 +16,8 @@ class DetailOrderPage extends StatefulWidget {
 }
 
 class _DetailOrderPageState extends State<DetailOrderPage> {
-  HomePageController homeController = Get.find();
+  //HomePageController homeController = Get.find();
+  SelectProductController selectProductController = Get.find();
 
   FocusNode myFocus;
 
@@ -57,19 +59,30 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                           Padding(
                             padding: const EdgeInsets.all(0.0),
                             child: IconButton(
-                                icon: Icon(Icons.remove, color: ORANGE_APPETIT, size: 30,),
-                                onPressed: ()=> controller.decQuantity()),
+                                icon: Icon(
+                                  Icons.remove,
+                                  color: ORANGE_APPETIT,
+                                  size: 30,
+                                ),
+                                onPressed: () => controller.decQuantity()),
                           ),
                           Obx(
-                            ()=> Padding(
+                            () => Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(controller.quantity.value.toString(), style: TextStyle(fontSize: 16),),
+                              child: Text(
+                                controller.quantity.value.toString(),
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(0.0),
                             child: IconButton(
-                                icon: Icon(Icons.add, color: ORANGE_APPETIT, size: 30,),
+                                icon: Icon(
+                                  Icons.add,
+                                  color: ORANGE_APPETIT,
+                                  size: 30,
+                                ),
                                 onPressed: () => controller.incQuantity()),
                           ),
                         ],
@@ -78,7 +91,18 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                     Spacer(),
                     InkWell(
                       onTap: () {
-                        // nada
+                        selectProductController.setNewItem(
+                          Item(
+                              codigoproduto: controller.product.codigoproduto,
+                              imagem: controller.product.imagem,
+                              produto: controller.product.produto,
+                              quantidade: controller.quantity.value,
+                              valortotal: (controller.quantity.value *
+                                  controller.product.preco),
+                              valorunitario: controller.product.preco),
+                        );
+                        //selectProductController.setTotalValueOrder();
+                        Get.back(result: true);
                       },
                       child: Container(
                         margin: EdgeInsets.all(16),
@@ -87,8 +111,11 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            Text('Adicionar', style: TextStyle(color: Colors.white)),
-                            Text('R\$ 10.00', style: TextStyle(color: Colors.white)),
+                            Text('Adicionar',
+                                style: TextStyle(color: Colors.white)),
+                            Obx(() => Text(
+                                'R\$ ${controller.totalValue.toStringAsFixed(2)}',
+                                style: TextStyle(color: Colors.white))),
                           ],
                         ),
                         decoration: BoxDecoration(
@@ -96,7 +123,7 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                           color: ORANGE_APPETIT,
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -118,7 +145,7 @@ class _DetailOrderPageState extends State<DetailOrderPage> {
                         Icons.arrow_back_ios,
                         color: ORANGE_APPETIT,
                       ),
-                      onPressed: Get.back,
+                      onPressed: () => Get.back(result: false),
                     ),
                   ),
                 ),
