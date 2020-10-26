@@ -46,11 +46,20 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle.dark.copyWith(statusBarColor: Colors.transparent));
     return GetBuilder<LoginController>(
       init: LoginController(),
-
       builder: (controller) => Scaffold(
+        bottomNavigationBar: Obx(
+          ()=> ButtonLoginWidget(
+            enabled: controller.buttonEnabled.value,
+            text: "ENTRAR",
+            onPressed: () {
+              Get.off(HomePage());
+            },
+          ),
+        ),
         body: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -80,6 +89,9 @@ class _LoginPageState extends State<LoginPage> {
                   margin: EdgeInsets.only(left: 16, right: 16),
                   color: Colors.white,
                   child: TextFormField(
+                    onChanged: (text){
+                      controller.setLabelEmail(text);
+                    },
                     onTap: requestFocusEmail,
                     focusNode: myFocusNodeEmail,
                     keyboardType: TextInputType.emailAddress,
@@ -109,16 +121,21 @@ class _LoginPageState extends State<LoginPage> {
                   margin: EdgeInsets.only(left: 16, right: 16),
                   color: Colors.white,
                   child: Obx(
-                    ()=> TextFormField(
+                    () => TextFormField(
+                      onChanged: (text){
+                        controller.setLabelPassword(text);
+                      },
                       obscureText: controller.showPassword.value == false,
                       onTap: requestFocusPassword,
                       focusNode: myFocusNodePassword,
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
-                          icon: Icon(controller.showPassword.value
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                          color: ORANGE_APPETIT,),
+                          icon: Icon(
+                            controller.showPassword.value
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: ORANGE_APPETIT,
+                          ),
                           onPressed: () => controller
                               .setShowPassword(!controller.showPassword.value),
                         ),
@@ -142,13 +159,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: 40),
-                ButtonLoginWidget(
-                  text: "ENTRAR",
-                  onPressed: () {
-                    Get.off(HomePage());
-                  },
                 ),
               ],
             ),

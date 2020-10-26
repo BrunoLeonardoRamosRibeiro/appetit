@@ -15,10 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var res = "";
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomePageController>(
       init: HomePageController(),
+      id: 'home',
       builder: (controller) => Scaffold(
         body: SingleChildScrollView(
           child: SafeArea(
@@ -26,9 +29,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: PictureWidget(
-                    imagePath: 'assets/images/ALESSANDRA.jpg',
-                    size: 60,
+                  child: InkWell(
+                    onTap: (){
+                      print('quantidade de Pedidos/Orders => ${controller.orders.length}');
+                    },
+                    child: PictureWidget(
+                      imagePath: 'assets/images/ALESSANDRA.jpg',
+                      size: 60,
+                    ),
                   ),
                 ),
                 HeaderWidget(text: 'Olá, Alessandra!', fontSize: 24),
@@ -38,7 +46,11 @@ class _HomePageState extends State<HomePage> {
                     height: 60,
                     elevation: 10,
                     onPressed: () {
-                      Get.to(SelectProductPage());
+                      Get.to(SelectProductPage()).then((value){
+                        print('resultado final ===> $value');
+                        controller.dates.clear();
+                        controller.fetchOrders();
+                      });
                     },
                     child: Row(
                       children: [
@@ -87,6 +99,8 @@ class _HomePageState extends State<HomePage> {
                           total = total + e.total;                          
                         });
 
+
+
                         return Column(
                           children: [
                             ListTile(
@@ -99,10 +113,88 @@ class _HomePageState extends State<HomePage> {
                               physics: ClampingScrollPhysics(),
                               itemCount: lista.length,
                               itemBuilder: (__, index) {
+
+
+
+                                //setState(() {
+                                  res = "";
+
+                                  lista[index].items.forEach((element) {
+
+                                    res = res + element.produto+',';
+
+                                  });
+                                  res = res.substring(0, res.length - 1)+'.';
+                                  lista[index].resumo = res;
+
+
+                                //});
+
                                 return Card(
-                                  child: ListTile(
-                                    title: Text(lista[index].nomecliente),
-                                    trailing: Text('R\$ ${lista[index].total.toStringAsFixed(2)}'),
+                                  child: Container(
+                                    height: 90,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 80,
+                                          width: 80,
+                                          child: PictureWidget(
+                                            imagePath:
+                                            lista[index].imagem,
+                                            size: 70,
+                                          ),
+                                        ),
+                                        Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                lista[index].nomecliente,
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Visibility(
+                                              visible: lista[index]
+                                                  .resumo
+                                                  .isNotEmpty,
+                                              child: Container(
+                                                width: 180,
+                                                child: Text(
+                                                  lista[index].resumo,
+                                                  overflow: TextOverflow.ellipsis,
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Spacer(),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Container(
+                                            width: 80,
+                                            child: Center(
+                                              child: Text(
+                                                'R\$ ${lista[index].total.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               },

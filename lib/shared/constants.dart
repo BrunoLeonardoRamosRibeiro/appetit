@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class AppAssets {
   static const LOGO = 'assets/images/appetit_logo.png';
-  static const LOGO_CHEF = 'assets/images/undraw_chef_lbjx.png';
+  static const LOGO_CHEF = 'assets/images/CHEF.png';
 }
 
 const MaterialColor ORANGE_APPETIT = const MaterialColor(

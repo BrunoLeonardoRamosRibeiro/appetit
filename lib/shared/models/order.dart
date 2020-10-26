@@ -16,6 +16,7 @@ class Order {
     this.data,
     this.total,
     this.items,
+    this.imagem,
   });
 
   String numeropedido;
@@ -24,6 +25,7 @@ class Order {
   String data;
   double total;
   List<Item> items;
+  String imagem;
 
   factory Order.fromJson(Map<String, dynamic> json) => Order(
     numeropedido: json["numeropedido"],
@@ -32,6 +34,7 @@ class Order {
     data: json["data"],
     total: json["total"].toDouble(),
     items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+    imagem: json["imagem"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -41,7 +44,11 @@ class Order {
     "data": data,
     "total": total,
     "items": List<dynamic>.from(items.map((x) => x.toJson())),
+    "imagem": imagem,
   };
+
+
+  String resumo = "";
 }
 
 class Item {

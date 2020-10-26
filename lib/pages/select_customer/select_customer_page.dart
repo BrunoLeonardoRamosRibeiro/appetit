@@ -1,6 +1,8 @@
+import 'package:appetit/pages/checkout/checkout_page.dart';
 import 'package:appetit/pages/login/widgets/search_widget.dart';
 import 'package:appetit/pages/select_customer/controller/select_customer_controller.dart';
 import 'package:appetit/shared/constants.dart';
+import 'package:appetit/shared/models/order.dart';
 import 'package:appetit/shared/widgets/header_widget.dart';
 import 'package:appetit/shared/widgets/picture_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,8 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rounded_progress_bar/flutter_rounded_progress_bar.dart';
 import 'package:flutter_rounded_progress_bar/rounded_progress_bar_style.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 
-class SelectClientPage extends StatelessWidget {
+class SelectClientPage extends StatefulWidget {
+  @override
+  _SelectClientPageState createState() => _SelectClientPageState();
+}
+
+class _SelectClientPageState extends State<SelectClientPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SelectCustomerController>(
@@ -40,7 +48,7 @@ class SelectClientPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        '0 clientes selecionados',
+                        '${controller.totalSelected.value} clientes selecionados',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -51,7 +59,7 @@ class SelectClientPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          // ainda nada
+                          Get.to(CheckoutPage());
                         },
                         child: Row(
                           children: [
@@ -164,7 +172,7 @@ class SelectClientPage extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
                   child: Text(
                     'Meus Clientes',
                     style: TextStyle(color: Colors.black, fontSize: 17),
@@ -175,43 +183,61 @@ class SelectClientPage extends StatelessWidget {
                 () => Visibility(
                   visible: !controller.isLoading.value,
                   child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
                     itemCount: controller.customers.length,
                     itemBuilder: (_, index){
-                      return Card(
-                        color: controller.customers[index].isOrder
-                            ? ORANGE_APPETIT
-                            : Colors.white,
-                        child: Container(
-                          height: 90,
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 80,
-                                width: 80,
-                                child: PictureWidget(
-                                  imagePath:
-                                  controller.customers[index].imagem,
-                                  size: 70,
-                                ),
-                              ),
-                              Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.center,
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+                        child: GestureDetector(
+                          onTap: (){
+
+                            setState(() {
+                              controller.customers[index].isOrder = !controller.customers[index].isOrder;
+                              controller.setTotalSelected();
+                              controller.setSelectedCustomers(controller.customers[index]);
+                              print('Quantidade de Customers Selecionados ==> ${controller.selectedCustomers.length}');
+                            });
+
+                          },
+
+                          child: Card(
+                            color: controller.customers[index].isOrder
+                                ? ORANGE_APPETIT
+                                : Colors.white,
+                            child: Container(
+                              height: 90,
+                              child: Row(
                                 children: [
-                                  Text(
-                                    controller.customers[index].nomecliente,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color:
-                                      !controller.customers[index].isOrder
-                                          ? Colors.black
-                                          : Colors.white,
+                                  Container(
+                                    height: 80,
+                                    width: 80,
+                                    child: PictureWidget(
+                                      imagePath:
+                                      controller.customers[index].imagem,
+                                      size: 70,
                                     ),
+                                  ),
+                                  Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        controller.customers[index].nomecliente,
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color:
+                                          !controller.customers[index].isOrder
+                                              ? Colors.black
+                                              : Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       );

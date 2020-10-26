@@ -6,30 +6,41 @@ import 'package:collection/collection.dart';
 import 'package:either_option/either_option.dart';
 import 'package:get/get.dart';
 
-class HomePageController extends GetxController{
-
+class HomePageController extends GetxController {
   OrderRepository orderRepository = OrderRepository();
 
   List<Order> orders = List<Order>();
+
   setOrders(List<Order> listOrders) => orders = listOrders;
 
   List<String> dates = List<String>();
+
   setDates(List<String> listDates) => dates = listDates;
 
   RxBool isLoading = RxBool(false);
+
   void setLoading(bool value) => isLoading.value = value;
 
   fetchOrders() async {
     setLoading(true);
 
-    Either<String, List<Order>> resOrders = await orderRepository.getOrders();
-    resOrders.fold((msg) => print(msg), (listOrders) => setOrders(listOrders));
+    if (orders.length == 0) {
+      Either<String, List<Order>> resOrders = await orderRepository.getOrders();
+      resOrders.fold(
+          (msg) => print(msg), (listOrders) => setOrders(listOrders));
+    } else {
+      var groupByDate = groupBy(orders, (obj) => obj.data);
+      groupByDate.forEach((date, list) {
+        dates.add(date);
+      });
+    }
 
-    var groupByDate = groupBy(orders, (obj) => obj.data);
-    groupByDate.forEach((date, list) {
-      dates.add(date);
-    });
     setLoading(false);
+  }
+
+  addNewOrder(Order newOrder) {
+    orders.add(newOrder);
+    update(['home']);
   }
 
   @override
@@ -38,5 +49,4 @@ class HomePageController extends GetxController{
     super.onInit();
     fetchOrders();
   }
-
 }

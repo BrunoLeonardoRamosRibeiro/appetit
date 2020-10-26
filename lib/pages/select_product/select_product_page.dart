@@ -94,7 +94,7 @@ class _SelectProductPageState extends State<SelectProductPage> {
                               Icons.arrow_back_ios,
                               color: ORANGE_APPETIT,
                             ),
-                            onPressed: Get.back,
+                            onPressed: ()=> Get.back(result: false),
                           ),
                         ),
                       ),
@@ -274,7 +274,7 @@ class _SelectProductPageState extends State<SelectProductPage> {
                                               ),
                                             ),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
